@@ -18,6 +18,7 @@ var mySecret = []byte("夏天夏天悄悄过去")
 type MyClaims struct {
 	UserID   int64  `json:"user_id"`
 	Username string `json:"username"`
+	Role     string `json:"role"`
 	jwt.StandardClaims
 }
 
@@ -27,6 +28,7 @@ func GenToken(userID int64, username string) (string, error) {
 	c := MyClaims{
 		userID,
 		"username", // 自定义字段
+		"user",
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(
 				time.Duration(viper.GetInt("auth.jwt_expire")) * time.Hour).Unix(), // 过期时间

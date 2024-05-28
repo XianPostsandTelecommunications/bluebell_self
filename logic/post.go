@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"bluebell/controller"
 	"bluebell/dao/mysql"
 	"bluebell/dao/redis"
 	"bluebell/models"
@@ -233,6 +232,5 @@ func PostAvatar(c *gin.Context, id string, file *multipart.FileHeader) {
 	// 将保存后的文件本地路径保存到用户表的头像字段
 	mysql.UploadAvatar(id, fileName[1:])
 	//返回响应
-	controller.ResponseSuccess(c, fileName)
 	return
 }

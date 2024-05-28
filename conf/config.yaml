@@ -16,7 +16,7 @@ log:
   max_backups: 7
 mysql:
   host: mysql8019
-  port: 33061
+  port: 3306
   user: "root"
   password: "123456"
   dbname: "bluebell"

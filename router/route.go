@@ -68,6 +68,7 @@ func SetupRouter(mode string) *gin.Engine {
 		// 删除帖子
 		manager.DELETE("/delete", controller.DeletePost)
 		// 删除用户头像
+		manager.DELETE("/deleteAvatar", controller.DeleteAvatar)
 
 	}
 	pprof.Register(r) // 注册pprof相关路由

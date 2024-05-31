@@ -57,19 +57,24 @@ func SetupRouter(mode string) *gin.Engine {
 	v1.Use(middlewares.JWTAuthMiddleware()) // 应用JWT认证中间件
 	{
 		// 用户头像上传
-		//v1.POST("/postAvatar", controller.PostAvatar)
+		v1.POST("/postAvatar", controller.PostAvatar)
 		// 发布帖子
 		v1.POST("/post", controller.CreatePostHandler)
 		// 投票
 		v1.POST("/vote", controller.PostVoteController)
+		// 个人页面
+		v1.GET("/userPage", controller.GetUserPage)
+		// 删除帖子
+		v1.DELETE("/deleteV1", controller.DeletePost)
 	}
 	manager := r.Group("/manager", middlewares.JWTAuthMiddleware(), middlewares.AuthManager())
 	{
 		// 删除帖子
-		manager.DELETE("/delete", controller.DeletePost)
+		manager.DELETE("/deleteRoot", controller.DeletePost)
+		// 置顶帖子
+		manager.POST("/postTop", controller.PostTop)
 		// 删除用户头像
-		manager.DELETE("/deleteAvatar", controller.DeleteAvatar)
-
+		//manager.DELETE("/deleteAvatar", controller.DeleteAvatar)
 	}
 	pprof.Register(r) // 注册pprof相关路由
 

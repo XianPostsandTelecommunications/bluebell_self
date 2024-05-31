@@ -68,8 +68,3 @@ func GetUserById(uid int64) (user *models.User, err error) {
 	err = db.Get(user, sqlStr, uid)
 	return
 }
-
-// CheckUserExistByID
-func CheckUserExistByID() {
-
-}

@@ -44,6 +44,5 @@ func PostVoteController(c *gin.Context) {
 		ResponseError(c, CodeServerBusy)
 		return
 	}
-
 	ResponseSuccess(c, nil)
 }

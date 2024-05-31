@@ -43,3 +43,19 @@ func Login(p *models.ParamLogin) (user *models.User, err error) {
 	user.Token = token
 	return
 }
+
+func GetUserPage(userID, ID int64) (user *models.User, post *models.Post) {
+	// 通过userID拿到用户数据
+	user = new(models.User)
+	post = new(models.Post)
+	user, err := mysql.GetUserById(userID)
+	if err != nil {
+		return
+	}
+	// 通过userID拿到帖子数据
+	post, err = mysql.GetPostById(ID)
+	if err != nil {
+		return
+	}
+	return
+}

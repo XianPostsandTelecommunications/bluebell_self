@@ -5,6 +5,7 @@ import (
 	"bluebell/dao/redis"
 	"bluebell/models"
 	"bluebell/pkg/snowflake"
+	"fmt"
 	"mime/multipart"
 	"strconv"
 	"time"
@@ -210,6 +211,7 @@ func GetPostListNew(p *models.ParamPostList) (data []*models.ApiPostDetail, err 
 	if p.CommunityID == 0 {
 		// 查所有
 		data, err = GetPostList2(p)
+		fmt.Println(data)
 	} else {
 		// 根据社区id查询
 		data, err = GetCommunityPostList(p)

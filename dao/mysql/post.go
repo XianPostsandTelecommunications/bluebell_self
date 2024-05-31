@@ -60,10 +60,12 @@ func GetPostListByIDs(ids []string) (postList []*models.Post, err error) {
 	return
 }
 
-func UploadAvatar(id string, fileName string) {
-	sqlstr := `insert into user (user_id,avatar)values (?,?)`
-	_, err := db.Exec(sqlstr, id, fileName)
+// DeletePost 删除帖子
+func DeletePost(postId int64) (err error) {
+	sqlstr := `delete from post where Post_id = ?`
+	_, err = db.Exec(sqlstr, postId)
 	if err != nil {
-		return
+		return err
 	}
+	return nil
 }

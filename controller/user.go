@@ -5,6 +5,7 @@ import (
 	"bluebell/logic"
 	"bluebell/models"
 	"bluebell/setting"
+	"strconv"
 
 	"encoding/json"
 	"errors"
@@ -91,7 +92,29 @@ func LoginHandler(c *gin.Context) {
 	})
 }
 
-//
+// GetUserPage 用户界面
+func GetUserPage(c *gin.Context) {
+	userIDStr := c.Query("UserID")
+	postIDStr := c.Query("ID")
+	userID, err := strconv.ParseInt(userIDStr, 10, 64)
+	if err != nil {
+		zap.L().Error("get userID detail with invalid param")
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	postID, err := strconv.ParseInt(postIDStr, 10, 64)
+	if err != nil {
+		zap.L().Error("get postID detail with invalid param")
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	user, post := logic.GetUserPage(userID, postID)
+	UserPage := models.UserPage{
+		User: user,
+		Post: post,
+	}
+	ResponseSuccess(c, UserPage)
+}
 
 // LoginSMSHandler 使用短信验证码登录
 func LoginSMSHandler(c *gin.Context) {

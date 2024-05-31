@@ -3,6 +3,7 @@ package controller
 import (
 	"bluebell/logic"
 	"bluebell/models"
+	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -103,6 +104,7 @@ func GetPostListHandler2(c *gin.Context) {
 		return
 	}
 	data, err := logic.GetPostListNew(p) // 更新：合二为一
+	fmt.Println(data)
 	// 获取数据
 	if err != nil {
 		zap.L().Error("logic.GetPostList() failed", zap.Error(err))
@@ -125,7 +127,11 @@ func PostAvatar(c *gin.Context) {
 	logic.PostAvatar(c, userID, file)
 }
 
-// 根据社区去查询帖子列表
+func PostTop(c *gin.Context) {
+
+}
+
+//// 根据社区去查询帖子列表
 //func GetCommunityPostListHandler(c *gin.Context) {
 //	// 初始化结构体时指定初始参数
 //	p := &models.ParamCommunityPostList{

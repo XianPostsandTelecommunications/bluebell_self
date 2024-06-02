@@ -43,7 +43,7 @@ var (
 )
 
 func CreatePost(postID, communityID int64) error {
-	pipeline := client.TxPipeline()
+	pipeline := client.TxPipeline() //创建一个事务流水线
 	// 帖子时间
 	pipeline.ZAdd(getRedisKey(KeyPostTimeZSet), redis.Z{
 		Score:  float64(time.Now().Unix()),

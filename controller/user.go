@@ -27,6 +27,12 @@ const (
 )
 
 // SignUpHandler 处理注册请求的函数
+// @Summary 账户注册业务
+// @Description 若账户未注册，则注册账户
+// @Tags 用户相关接口
+// @Accept application/json
+// @Produce application/json
+// @Param
 func SignUpHandler(c *gin.Context) {
 	// 1. 获取参数和参数校验
 	p := new(models.ParamSignUp)

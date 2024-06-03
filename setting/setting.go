@@ -61,7 +61,7 @@ type SMSConfig struct {
 func Init() (err error) {
 	// 方式1：直接指定配置文件路径（相对路径或者绝对路径）
 	// 相对路径：相对执行的可执行文件的相对路径
-	viper.SetConfigFile("./conf/config.yaml")
+	viper.SetConfigFile("./conf/dev.yml")
 	// 绝对路径：系统中实际的文件路径
 	//viper.SetConfigFile("/Users/liwenzhou/Desktop/bluebell/conf/config.yaml")
 

@@ -6,6 +6,7 @@ create table user
     username    varchar(64)                         not null,
     password    varchar(64)                         not null,
     email       varchar(64)                         null,
+    phone       varchar(64)          ,
     gender      tinyint   default 0                 not null,
     avatar      varchar(64)    ,
     create_time timestamp default CURRENT_TIMESTAMP null,

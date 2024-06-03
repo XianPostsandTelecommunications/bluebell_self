@@ -41,6 +41,18 @@ func CreatePostHandler(c *gin.Context) {
 }
 
 // GetPostDetailHandler 获取帖子详情的处理函数
+// @Summary 获取帖子详情的处理函数
+// @Description 用id得到帖子
+// @Tags 帖子相关接口(api分组展示使用的)
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer JWT"
+// @Param id path int true "帖子ID"
+// @Security ApiKeyAuth
+// @Success 200 {object} _ResponseSuccess "成功响应"
+// @Success 400 {object} _ResponseError "响应错误"
+// @Success 500 {object} _ResponseError "服务器错误"
+// @Router /post/:id [get]
 func GetPostDetailHandler(c *gin.Context) {
 	// 1. 获取参数（从URL中获取帖子的id）
 	pidStr := c.Param("id")
@@ -115,6 +127,19 @@ func GetPostListHandler2(c *gin.Context) {
 	// 返回响应
 }
 
+// PostAvatar 提交头像的处理函数
+// @Summary 提交头像的处理函数
+// @Description 提交头像地址到数据库
+// @Tags 用户相关接口(api分组展示使用的)
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer JWT"
+// @Param id path int true "帖子ID"
+// @Security ApiKeyAuth
+// @Success 200 {object} _ResponseSuccess "成功响应"
+// @Success 400 {object} _ResponseError "响应错误"
+// @Success 500 {object} _ResponseError "服务器错误"
+// @Router /post/:id [get]
 func PostAvatar(c *gin.Context) {
 	// 获取参数，id与file
 	userID := c.PostForm("user_id")

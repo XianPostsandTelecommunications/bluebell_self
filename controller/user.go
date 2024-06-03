@@ -26,13 +26,19 @@ const (
 	mnsDomain = "1943695596114318.mns.cn-hangzhou.aliyuncs.com"
 )
 
-// SignUpHandler 处理注册请求的函数
-// @Summary 账户注册业务
-// @Description 若账户未注册，则注册账户
-// @Tags 用户相关接口
+// SignUpHandler 用户注册接口
+// @Summary 用户注册接口
+// @Description 注册用户账户
+// @Tags 用户相关接口(api分组展示使用的)
 // @Accept application/json
 // @Produce application/json
-// @Param
+// @Param Authorization header string true "Bearer JWT"
+// @Param ParamSignUp body models.ParamSignUp true "用户注册参数"
+// @Security ApiKeyAuth
+// @Success 200 {object} _ResponseSuccess "成功响应"
+// @Success 400 {object} _ResponseError "响应错误"
+// @Success 500 {object} _ResponseError "服务器错误"
+// @Router /community/:id [post]
 func SignUpHandler(c *gin.Context) {
 	// 1. 获取参数和参数校验
 	p := new(models.ParamSignUp)
@@ -62,7 +68,19 @@ func SignUpHandler(c *gin.Context) {
 	ResponseSuccess(c, nil)
 }
 
-// LoginHandler 登录
+// LoginHandler 用户登录接口
+// @Summary 用户登录接口
+// @Description 登录用户账户
+// @Tags 用户相关接口(api分组展示使用的)
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer JWT"
+// @Param ParamLogin body models.ParamLogin true "用户登录参数"
+// @Security ApiKeyAuth
+// @Success 200 {object} _ResponseSuccess "成功响应"
+// @Success 400 {object} _ResponseError "响应错误"
+// @Success 500 {object} _ResponseError "服务器错误"
+// @Router /login [post]
 func LoginHandler(c *gin.Context) {
 	// 1.获取请求参数及参数校验
 	p := new(models.ParamLogin)
@@ -123,6 +141,18 @@ func GetUserPage(c *gin.Context) {
 }
 
 // LoginSMSHandler 使用短信验证码登录
+// @Summary 短信验证码接口
+// @Description 使用阿里云短信服务SDK发送短信验证码
+// @Tags 短信相关接口(api分组展示使用的)
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer JWT"
+// @Param ParamLogin body models.ParamLogin true "用户登录参数"
+// @Security ApiKeyAuth
+// @Success 200 {object} _ResponseSuccess "成功响应"
+// @Success 400 {object} _ResponseError "响应错误"
+// @Success 500 {object} _ResponseError "服务器错误"
+// @Router /loginSMS [post]
 func LoginSMSHandler(c *gin.Context) {
 	// 获取参数
 	phone := c.Query("phone")
@@ -162,67 +192,4 @@ func LoginSMSHandler(c *gin.Context) {
 	if err != nil {
 		zap.L().Error("client.SendSms(request) error", zap.Error(err))
 	}
-
-	//queueName := "MyQueue"
-	//messageType := "SMS"
-	//cstLoc, _ := time.LoadLocation("Asia/Shanghai")
-	//var token *dybaseapi.MessageTokenDTO
-	//var expireTime time.Time
-	//for {
-	//	if token == nil || expireTime.Unix()-time.Now().Unix() < 2*60 {
-	//		// 创建 API 请求并设置参数
-	//		request := dybaseapi.CreateQueryTokenForMnsQueueRequest()
-	//		request.MessageType = messageType
-	//		request.QueueName = queueName
-	//		// 发起请求并处理异常
-	//		response, err := client.QueryTokenForMnsQueue(request)
-	//		if err != nil {
-	//			panic(err)
-	//		}
-	//
-	//		token = &response.MessageTokenDTO
-	//	}
-	//	expireTime, err = time.ParseInLocation("2006-01-02 15:04:05", token.ExpireTime, cstLoc)
-	//	if err != nil {
-	//		panic(err)
-	//	}
-	//	mnsClient, err := mns.NewClientWithStsToken(
-	//		"cn-hangzhou",
-	//		token.AccessKeyId,
-	//		token.AccessKeySecret,
-	//		token.SecurityToken,
-	//	)
-	//	if err != nil {
-	//		panic(err)
-	//	}
-	//	mnsRequest := mns.CreateBatchReceiveMessageRequest()
-	//	mnsRequest.Domain = mnsDomain
-	//	mnsRequest.QueueName = queueName
-	//	mnsRequest.NumOfMessages = "10"
-	//	mnsRequest.WaitSeconds = "5"
-	//	mnsResponse, err := mnsClient.BatchReceiveMessage(mnsRequest)
-	//	if err != nil {
-	//		panic(err)
-	//	}
-	//	// fmt.Println(mnsResponse)
-	//	receiptHandles := make([]string, len(mnsResponse.Message))
-	//	for i, message := range mnsResponse.Message {
-	//		messageBody, decodeErr := base64.StdEncoding.DecodeString(message.MessageBody)
-	//		if decodeErr != nil {
-	//			panic(decodeErr)
-	//		}
-	//		fmt.Println(string(messageBody))
-	//		receiptHandles[i] = message.ReceiptHandle
-	//	}
-	//	if len(receiptHandles) > 0 {
-	//		mnsDeleteRequest := mns.CreateBatchDeleteMessageRequest()
-	//		mnsDeleteRequest.Domain = mnsDomain
-	//		mnsDeleteRequest.QueueName = queueName
-	//		mnsDeleteRequest.SetReceiptHandles(receiptHandles)
-	//		//_, err = mnsClient.BatchDeleteMessage(mnsDeleteRequest) //取消注释将删除队列中的消息
-	//		if err != nil {
-	//			panic(err)
-	//		}
-	//	}
-	//}
 }

@@ -10,6 +10,18 @@ import (
 
 // ---- 跟社区相关的 ----
 
+// CommunityHandler 查询社区
+// @Summary 查询社区
+// @Description 查询所有社区
+// @Tags 社区相关接口(api分组展示使用的)
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer JWT"
+// @Security ApiKeyAuth
+// @Success 200 {object} _ResponseSuccess "成功响应"
+// @Success 400 {object} _ResponseError "响应错误"
+// @Success 500 {object} _ResponseError "服务器错误"
+// @Router /community [get]
 func CommunityHandler(c *gin.Context) {
 	// 查询到所有的社区（community_id, community_name) 以列表的形式返回
 	data, err := logic.GetCommunityList()
@@ -21,7 +33,19 @@ func CommunityHandler(c *gin.Context) {
 	ResponseSuccess(c, data)
 }
 
-// CommunityDetailHandler 社区分类详情
+// CommunityDetailHandler 社区详情
+// @Summary 社区详情
+// @Description 用id得到社区详情
+// @Tags 社区相关接口(api分组展示使用的)
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer JWT"
+// @Param id path int true "社区ID"
+// @Security ApiKeyAuth
+// @Success 200 {object} _ResponseSuccess "成功响应"
+// @Success 400 {object} _ResponseError "响应错误"
+// @Success 500 {object} _ResponseError "服务器错误"
+// @Router /community/:id [get]
 func CommunityDetailHandler(c *gin.Context) {
 	// 1. 获取社区id
 	idStr := c.Param("id") // 获取URL参数

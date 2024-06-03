@@ -57,7 +57,6 @@ func SetupRouter(mode string) *gin.Engine {
 	v1.Use(middlewares.JWTAuthMiddleware()) // 应用JWT认证中间件
 	{
 		// 修改个人帖子
-
 		// 用户头像上传
 		v1.POST("/postAvatar", controller.PostAvatar)
 		// 发布帖子

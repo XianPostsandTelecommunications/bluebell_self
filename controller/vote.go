@@ -19,6 +19,19 @@ import (
 //	Direction int   `json:"direction,string"` // 赞成票(1)还是反对票(-1)
 //}
 
+// PostVoteController  有关投票的处理函数
+// @Summary 有关投票的处理函数
+// @Description 处理投票
+// @Tags 帖子相关接口(api分组展示使用的)
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer JWT"
+// @Param object body models.ParamVoteData true "投票信息"
+// @Security ApiKeyAuth
+// @Success 200 {object} models.ResponseSuccess "成功响应"
+// @Success 400 {object} models.ResponseError "响应错误"
+// @Success 500 {object} models.ResponseError "服务器错误"
+// @Router /vote [post]
 func PostVoteController(c *gin.Context) {
 	// 参数校验
 	p := new(models.ParamVoteData)

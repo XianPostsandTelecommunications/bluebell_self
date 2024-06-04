@@ -44,7 +44,7 @@ func Login(p *models.ParamLogin) (user *models.User, err error) {
 	return
 }
 
-func GetUserPage(userID, ID int64) (user *models.User, post *models.Post) {
+func GetUserPage(userID, postID int64) (user *models.User, post *models.Post) {
 	// 通过userID拿到用户数据
 	user = new(models.User)
 	post = new(models.Post)
@@ -52,8 +52,8 @@ func GetUserPage(userID, ID int64) (user *models.User, post *models.Post) {
 	if err != nil {
 		return
 	}
-	// 通过userID拿到帖子数据
-	post, err = mysql.GetPostById(ID)
+	// 通过帖子ID拿到帖子数据
+	post, err = mysql.GetPostById(postID)
 	if err != nil {
 		return
 	}

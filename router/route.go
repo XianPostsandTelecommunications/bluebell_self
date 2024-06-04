@@ -58,7 +58,7 @@ func SetupRouter(mode string) *gin.Engine {
 	{
 		// 修改个人帖子
 		// 用户头像上传
-		v1.POST("/postAvatar", controller.PostAvatar)
+		v1.POST("/user/:user_id/avatar", controller.PostAvatar)
 		// 发布帖子
 		v1.POST("/post", controller.CreatePostHandler)
 		// 投票

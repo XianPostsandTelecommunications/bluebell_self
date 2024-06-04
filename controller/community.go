@@ -18,9 +18,9 @@ import (
 // @Produce application/json
 // @Param Authorization header string true "Bearer JWT"
 // @Security ApiKeyAuth
-// @Success 200 {object} _ResponseSuccess "成功响应"
-// @Success 400 {object} _ResponseError "响应错误"
-// @Success 500 {object} _ResponseError "服务器错误"
+// @Success 200 {object} models.ResponseSuccess "成功响应"
+// @Success 400 {object} models.ResponseError "响应错误"
+// @Success 500 {object} models.ResponseError "服务器错误"
 // @Router /community [get]
 func CommunityHandler(c *gin.Context) {
 	// 查询到所有的社区（community_id, community_name) 以列表的形式返回
@@ -42,9 +42,9 @@ func CommunityHandler(c *gin.Context) {
 // @Param Authorization header string true "Bearer JWT"
 // @Param id path int true "社区ID"
 // @Security ApiKeyAuth
-// @Success 200 {object} _ResponseSuccess "成功响应"
-// @Success 400 {object} _ResponseError "响应错误"
-// @Success 500 {object} _ResponseError "服务器错误"
+// @Success 200 {object} models.ResponseSuccess "成功响应"
+// @Success 400 {object} models.ResponseError "响应错误"
+// @Success 500 {object} models.ResponseError "服务器错误"
 // @Router /community/:id [get]
 func CommunityDetailHandler(c *gin.Context) {
 	// 1. 获取社区id

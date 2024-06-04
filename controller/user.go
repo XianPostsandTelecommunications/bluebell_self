@@ -35,9 +35,9 @@ const (
 // @Param Authorization header string true "Bearer JWT"
 // @Param ParamSignUp body models.ParamSignUp true "用户注册参数"
 // @Security ApiKeyAuth
-// @Success 200 {object} _ResponseSuccess "成功响应"
-// @Success 400 {object} _ResponseError "响应错误"
-// @Success 500 {object} _ResponseError "服务器错误"
+// @Success 200 {object} models.ResponseSuccess "成功响应"
+// @Success 400 {object} models.ResponseError "响应错误"
+// @Success 500 {object} models.ResponseError "服务器错误"
 // @Router /community/:id [post]
 func SignUpHandler(c *gin.Context) {
 	// 1. 获取参数和参数校验
@@ -77,9 +77,9 @@ func SignUpHandler(c *gin.Context) {
 // @Param Authorization header string true "Bearer JWT"
 // @Param ParamLogin body models.ParamLogin true "用户登录参数"
 // @Security ApiKeyAuth
-// @Success 200 {object} _ResponseSuccess "成功响应"
-// @Success 400 {object} _ResponseError "响应错误"
-// @Success 500 {object} _ResponseError "服务器错误"
+// @Success 200 {object} models.ResponseSuccess "成功响应"
+// @Success 400 {object} models.ResponseError "响应错误"
+// @Success 500 {object} models.ResponseError "服务器错误"
 // @Router /login [post]
 func LoginHandler(c *gin.Context) {
 	// 1.获取请求参数及参数校验
@@ -117,6 +117,19 @@ func LoginHandler(c *gin.Context) {
 }
 
 // GetUserPage 用户界面
+// @Summary 用户界面
+// @Description 完成用户页面
+// @Tags 用户相关接口(api分组展示使用的)
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer JWT"
+// @Param UserID query int true "用户ID"
+// @Param ID query int true "帖子ID"
+// @Security ApiKeyAuth
+// @Success 200 {object} models.ResponseSuccess "成功响应"
+// @Success 400 {object} models.ResponseError "响应错误"
+// @Success 500 {object} models.ResponseError "服务器错误"
+// @Router /userPage [get]
 func GetUserPage(c *gin.Context) {
 	userIDStr := c.Query("UserID")
 	postIDStr := c.Query("ID")
@@ -149,9 +162,9 @@ func GetUserPage(c *gin.Context) {
 // @Param Authorization header string true "Bearer JWT"
 // @Param ParamLogin body models.ParamLogin true "用户登录参数"
 // @Security ApiKeyAuth
-// @Success 200 {object} _ResponseSuccess "成功响应"
-// @Success 400 {object} _ResponseError "响应错误"
-// @Success 500 {object} _ResponseError "服务器错误"
+// @Success 200 {object} models.ResponseSuccess "成功响应"
+// @Success 400 {object} models.ResponseError "响应错误"
+// @Success 500 {object} models.ResponseError "服务器错误"
 // @Router /loginSMS [post]
 func LoginSMSHandler(c *gin.Context) {
 	// 获取参数

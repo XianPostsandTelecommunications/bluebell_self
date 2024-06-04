@@ -1,27 +1,52 @@
 basePath: /api/v1
 definitions:
-  controller._ResponsePostList:
+  models.ParamLogin:
     properties:
-      code:
-        description: 业务响应状态码
-        type: integer
-      data:
-        description: 数据
-        items:
-          $ref: '#/definitions/models.ApiPostDetail'
-        type: array
-      message:
-        description: 提示信息
+      password:
         type: string
+      phone:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - phone
+    - username
     type: object
-  models.ApiPostDetail:
+  models.ParamSignUp:
+    properties:
+      password:
+        type: string
+      re_password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - re_password
+    - username
+    type: object
+  models.ParamVoteData:
+    properties:
+      direction:
+        description: 赞成票(1)还是反对票(-1)取消投票(0)
+        enum:
+        - 1
+        - 0
+        - -1
+        example: "0"
+        type: string
+      post_id:
+        description: UserID 从请求中获取当前的用户
+        type: string
+    required:
+    - post_id
+    type: object
+  models.Post:
     properties:
       author_id:
         description: 作者id
         type: integer
-      author_name:
-        description: 作者
-        type: string
       community_id:
         description: 社区id
         type: integer
@@ -29,12 +54,11 @@ definitions:
         description: 帖子内容
         type: string
       create_time:
+        description: 帖子创建时间
         type: string
       id:
-        type: integer
-      introduction:
-        type: string
-      name:
+        description: 帖子id
+        example: "0"
         type: string
       status:
         description: 帖子状态
@@ -42,42 +66,320 @@ definitions:
       title:
         description: 帖子标题
         type: string
-      vote_num:
-        description: 投票数
-        type: integer
     required:
     - community_id
     - content
     - title
     type: object
-  models.ParamPostList:
+  models.ResponseError:
     properties:
-      community_id:
-        description: 可以为空
+      code:
         type: integer
-      order:
-        description: 排序依据
-        example: score
+      msg:
         type: string
-      page:
-        description: 页码
-        example: 1
-        type: integer
-      size:
-        description: 每页数据量
-        example: 10
-        type: integer
     type: object
-host: 127.0.0.1:8084
+  models.ResponseSuccess:
+    properties:
+      code:
+        type: integer
+      data: {}
+      msg:
+        type: string
+    type: object
+host: 127.0.0.1:8080
 info:
   contact:
-    name: liwenzhou
-    url: http://www.liwenzhou.com
-  description: Go web开发进阶项目实战课程bluebell
-  license: {}
+    name: 吴文胜
+  description: Go web开发课程设计bluebell
   title: bluebell项目接口文档
   version: "1.0"
 paths:
+  /community:
+    get:
+      consumes:
+      - application/json
+      description: 查询所有社区
+      parameters:
+      - description: Bearer JWT
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/models.ResponseSuccess'
+        "400":
+          description: 响应错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      security:
+      - ApiKeyAuth: []
+      summary: 查询社区
+      tags:
+      - 社区相关接口(api分组展示使用的)
+  /community/:id:
+    get:
+      consumes:
+      - application/json
+      description: 用id得到社区详情
+      parameters:
+      - description: Bearer JWT
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 社区ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/models.ResponseSuccess'
+        "400":
+          description: 响应错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      security:
+      - ApiKeyAuth: []
+      summary: 社区详情
+      tags:
+      - 社区相关接口(api分组展示使用的)
+    post:
+      consumes:
+      - application/json
+      description: 注册用户账户
+      parameters:
+      - description: Bearer JWT
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 用户注册参数
+        in: body
+        name: ParamSignUp
+        required: true
+        schema:
+          $ref: '#/definitions/models.ParamSignUp'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/models.ResponseSuccess'
+        "400":
+          description: 响应错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      security:
+      - ApiKeyAuth: []
+      summary: 用户注册接口
+      tags:
+      - 用户相关接口(api分组展示使用的)
+  /deleteV1:
+    delete:
+      consumes:
+      - application/json
+      description: 删除帖子在数据库中数据
+      parameters:
+      - description: Bearer JWT
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 帖子ID
+        in: query
+        name: ID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/models.ResponseSuccess'
+        "400":
+          description: 响应错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除帖子功能
+      tags:
+      - 帖子相关接口(api分组展示使用的)
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: 登录用户账户
+      parameters:
+      - description: Bearer JWT
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 用户登录参数
+        in: body
+        name: ParamLogin
+        required: true
+        schema:
+          $ref: '#/definitions/models.ParamLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/models.ResponseSuccess'
+        "400":
+          description: 响应错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      security:
+      - ApiKeyAuth: []
+      summary: 用户登录接口
+      tags:
+      - 用户相关接口(api分组展示使用的)
+  /loginSMS:
+    post:
+      consumes:
+      - application/json
+      description: 使用阿里云短信服务SDK发送短信验证码
+      parameters:
+      - description: Bearer JWT
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 用户登录参数
+        in: body
+        name: ParamLogin
+        required: true
+        schema:
+          $ref: '#/definitions/models.ParamLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/models.ResponseSuccess'
+        "400":
+          description: 响应错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      security:
+      - ApiKeyAuth: []
+      summary: 短信验证码接口
+      tags:
+      - 短信相关接口(api分组展示使用的)
+  /post:
+    post:
+      consumes:
+      - application/json
+      description: 创建帖子
+      parameters:
+      - description: Bearer JWT
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 帖子信息
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/models.Post'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/models.ResponseSuccess'
+        "400":
+          description: 响应错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      security:
+      - ApiKeyAuth: []
+      summary: 创建帖子的处理函数
+      tags:
+      - 帖子相关接口(api分组展示使用的)
+  /post/:id:
+    get:
+      consumes:
+      - application/json
+      description: 用id得到帖子
+      parameters:
+      - description: Bearer JWT
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 帖子ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/models.ResponseSuccess'
+        "400":
+          description: 响应错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取帖子详情的处理函数
+      tags:
+      - 帖子相关接口(api分组展示使用的)
   /posts2:
     get:
       consumes:
@@ -114,10 +416,137 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controller._ResponsePostList'
+            $ref: '#/definitions/models.ResponseSuccess'
+        "400":
+          description: 响应错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
       security:
       - ApiKeyAuth: []
       summary: 升级版帖子列表接口
+      tags:
+      - 帖子相关接口(api分组展示使用的)
+  /user/:user_id/avatar:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 提交头像地址到数据库
+      parameters:
+      - description: Bearer JWT
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 用户ID
+        in: formData
+        name: user_id
+        required: true
+        type: integer
+      - description: 头像文件
+        in: formData
+        name: avatar
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/models.ResponseSuccess'
+        "400":
+          description: 响应错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      security:
+      - ApiKeyAuth: []
+      summary: 提交头像的处理函数
+      tags:
+      - 用户相关接口(api分组展示使用的)
+  /userPage:
+    get:
+      consumes:
+      - application/json
+      description: 完成用户页面
+      parameters:
+      - description: Bearer JWT
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 用户ID
+        in: query
+        name: UserID
+        required: true
+        type: integer
+      - description: 帖子ID
+        in: query
+        name: ID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/models.ResponseSuccess'
+        "400":
+          description: 响应错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      security:
+      - ApiKeyAuth: []
+      summary: 用户界面
+      tags:
+      - 用户相关接口(api分组展示使用的)
+  /vote:
+    post:
+      consumes:
+      - application/json
+      description: 处理投票
+      parameters:
+      - description: Bearer JWT
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 投票信息
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/models.ParamVoteData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/models.ResponseSuccess'
+        "400":
+          description: 响应错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      security:
+      - ApiKeyAuth: []
+      summary: 有关投票的处理函数
       tags:
       - 帖子相关接口(api分组展示使用的)
 swagger: "2.0"

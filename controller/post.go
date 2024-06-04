@@ -12,6 +12,18 @@ import (
 )
 
 // CreatePostHandler 创建帖子的处理函数
+// @Summary 创建帖子的处理函数
+// @Description 创建帖子
+// @Tags 帖子相关接口(api分组展示使用的)
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer JWT"
+// @Param object body models.Post true "帖子信息"
+// @Security ApiKeyAuth
+// @Success 200 {object} models.ResponseSuccess "成功响应"
+// @Success 400 {object} models.ResponseError "响应错误"
+// @Success 500 {object} models.ResponseError "服务器错误"
+// @Router /post [post]
 func CreatePostHandler(c *gin.Context) {
 	// 1. 获取参数及参数的校验
 	//c.ShouldBindJSON()  // validator --> binding tag
@@ -49,9 +61,9 @@ func CreatePostHandler(c *gin.Context) {
 // @Param Authorization header string true "Bearer JWT"
 // @Param id path int true "帖子ID"
 // @Security ApiKeyAuth
-// @Success 200 {object} _ResponseSuccess "成功响应"
-// @Success 400 {object} _ResponseError "响应错误"
-// @Success 500 {object} _ResponseError "服务器错误"
+// @Success 200 {object} models.ResponseSuccess "成功响应"
+// @Success 400 {object} models.ResponseError "响应错误"
+// @Success 500 {object} models.ResponseError "服务器错误"
 // @Router /post/:id [get]
 func GetPostDetailHandler(c *gin.Context) {
 	// 1. 获取参数（从URL中获取帖子的id）
@@ -98,7 +110,9 @@ func GetPostListHandler(c *gin.Context) {
 // @Param Authorization header string true "Bearer JWT"
 // @Param object query models.ParamPostList false "查询参数"
 // @Security ApiKeyAuth
-// @Success 200 {object} _ResponsePostList
+// @Success 200 {object} models.ResponseSuccess
+// @Success 400 {object} models.ResponseError "响应错误"
+// @Success 500 {object} models.ResponseError "服务器错误"
 // @Router /posts2 [get]
 func GetPostListHandler2(c *gin.Context) {
 	// GET请求参数(query string)：/api/v1/posts2?page=1&size=10&order=time
@@ -131,15 +145,16 @@ func GetPostListHandler2(c *gin.Context) {
 // @Summary 提交头像的处理函数
 // @Description 提交头像地址到数据库
 // @Tags 用户相关接口(api分组展示使用的)
-// @Accept application/json
+// @Accept multipart/form-data
 // @Produce application/json
 // @Param Authorization header string true "Bearer JWT"
-// @Param id path int true "帖子ID"
+// @Param user_id formData int true "用户ID"
+// @Param avatar formData file true "头像文件"
 // @Security ApiKeyAuth
-// @Success 200 {object} _ResponseSuccess "成功响应"
-// @Success 400 {object} _ResponseError "响应错误"
-// @Success 500 {object} _ResponseError "服务器错误"
-// @Router /post/:id [get]
+// @Success 200 {object} models.ResponseSuccess "成功响应"
+// @Success 400 {object} models.ResponseError "响应错误"
+// @Success 500 {object} models.ResponseError "服务器错误"
+// @Router /user/:user_id/avatar [post]
 func PostAvatar(c *gin.Context) {
 	// 获取参数，id与file
 	userID := c.PostForm("user_id")

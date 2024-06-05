@@ -38,38 +38,40 @@ func SetupRouter(mode string) *gin.Engine {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	v1 := r.Group("/api/v1")
+	{
+		// 注册
+		v1.POST("/signup", controller.SignUpHandler)
+		// 登录
+		v1.GET("/login", controller.LoginHandler)
+		// 短信验证码登录
+		v1.POST("/loginSMS", controller.LoginSMSHandler)
+		// 根据时间或分数获取帖子列表
+		v1.GET("/posts2", controller.GetPostListHandler2)
+		v1.GET("/posts", controller.GetPostListHandler)
+		v1.GET("/community", controller.CommunityHandler)
+		v1.GET("/community/id/:id", controller.CommunityDetailHandler)
+		v1.GET("/community/name/:name", controller.CommunityByName)
+		v1.GET("/post/:id", controller.GetPostDetailHandler)
+		v1.GET("/select", controller.GetPostBySelect)
+	}
 
-	// 注册
-	v1.POST("/signup", controller.SignUpHandler)
-	// 登录
-	v1.GET("/login", controller.LoginHandler)
-	// 图形验证码
-	//v1.GET("/loginImage", controller.LoginImageHandler)
-	// 短信验证码登录
-	v1.POST("/loginSMS", controller.LoginSMSHandler)
-	// 根据时间或分数获取帖子列表
-	v1.GET("/posts2", controller.GetPostListHandler2)
-	v1.GET("/posts", controller.GetPostListHandler)
-	v1.GET("/community", controller.CommunityHandler)
-	v1.GET("/community/id/:id", controller.CommunityDetailHandler)
-	v1.GET("/post/:id", controller.GetPostDetailHandler)
-	v1.GET("/select", controller.GetPostBySelect)
-	v1.GET("/community/name/:name", controller.CommunityByName)
-
+	auth := v1.Group("/")
+	auth.Use(middlewares.JWTAuthMiddleware())
 	{
 		// 帖子评论
-		//v1.POST("/comment", controller.PostComment)
+		// auth.POST("/comment", controller.PostComment)
 		// 用户头像上传
-		v1.POST("/user/:user_id/avatar", controller.PostAvatar)
+		auth.POST("/user/:user_id/avatar", controller.PostAvatar)
 		// 发布帖子
-		v1.POST("/post", controller.CreatePostHandler)
+		auth.POST("/post", controller.CreatePostHandler)
 		// 投票
-		v1.POST("/vote", controller.PostVoteController)
+		auth.POST("/vote", controller.PostVoteController)
 		// 个人页面
-		v1.GET("/userPage", controller.GetUserPage)
+		auth.GET("/userPage", controller.GetUserPage)
 		// 删除帖子
-		v1.DELETE("/deleteV1", controller.DeletePost)
+		auth.DELETE("/deleteV1", controller.DeletePost)
 	}
+
 	manager := r.Group("/manager", middlewares.JWTAuthMiddleware(), middlewares.AuthManager())
 	{
 		// 删除帖子

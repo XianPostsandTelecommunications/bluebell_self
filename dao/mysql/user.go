@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"database/sql"
 	"encoding/hex"
+	"fmt"
 )
 
 // 把每一步数据库操作封装成函数
@@ -53,6 +54,7 @@ func Login(user *models.User) (err error) {
 		// 查询数据库失败
 		return err
 	}
+	fmt.Println(user)
 	// 判断密码是否正确
 	password := encryptPassword(oPassword)
 	if password != user.Password {

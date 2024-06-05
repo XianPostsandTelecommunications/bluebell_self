@@ -5,6 +5,7 @@ import (
 	"bluebell/models"
 	"bluebell/pkg/jwt"
 	"bluebell/pkg/snowflake"
+	"fmt"
 )
 
 // 存放业务逻辑的代码
@@ -35,6 +36,7 @@ func Login(p *models.ParamLogin) (user *models.User, err error) {
 	if err := mysql.Login(user); err != nil {
 		return nil, err
 	}
+	fmt.Println(user)
 	// 生成JWT
 	token, err := jwt.GenToken(user.UserID, user.Username)
 	if err != nil {

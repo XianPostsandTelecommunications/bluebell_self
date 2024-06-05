@@ -18,7 +18,7 @@ type ParamSignUp struct {
 type ParamLogin struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
-	Phone    string `json:"phone" binding:"required"`
+	//Phone    string `json:"phone" binding:"required"`
 }
 
 // ParamVoteData 投票数据

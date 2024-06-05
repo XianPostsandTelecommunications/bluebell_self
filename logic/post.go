@@ -115,7 +115,7 @@ func GetPostList2(p *models.ParamPostList) (data []*models.ApiPostDetail, err er
 	if err != nil {
 		return
 	}
-	zap.L().Debug("GetPostList2", zap.Any("posts", posts))
+	//zap.L().Debug("GetPostList2", zap.Any("posts", posts))
 	// 提前查询好每篇帖子的投票数
 	voteData, err := redis.GetPostVoteData(ids)
 	if err != nil {
@@ -234,5 +234,14 @@ func PostAvatar(c *gin.Context, id string, file *multipart.FileHeader) {
 	// 将保存后的文件本地路径保存到用户表的头像字段
 	mysql.UploadAvatar(id, fileName[1:])
 	//返回响应
+	return
+}
+
+func GetPostByTitle(title string) (post []*models.Post, err error) {
+	post, err = mysql.GetPostsByTitle(title)
+	if err != nil {
+		zap.L().Error("mysql.GetPostByTitle(title) invalied params", zap.Error(err))
+		return
+	}
 	return
 }

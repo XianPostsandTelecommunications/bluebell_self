@@ -5,6 +5,8 @@ type User struct {
 	Username string `db:"username"`
 	Password string `db:"password"`
 	Avatar   string `db:"avatar"`
+	Email    string `db:"email"`
+	Phone    string `db:"phone"`
 	Token    string
 }
 

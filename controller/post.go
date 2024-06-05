@@ -3,6 +3,7 @@ package controller
 import (
 	"bluebell/logic"
 	"bluebell/models"
+	"bluebell/pkg/badword"
 	"fmt"
 	"strconv"
 
@@ -32,6 +33,23 @@ func CreatePostHandler(c *gin.Context) {
 		zap.L().Debug("c.ShouldBindJSON(p) error", zap.Any("err", err))
 		zap.L().Error("create post with invalid param")
 		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	// 初始化敏感词树
+	SensitiveTree := badword.NewTrieV1()
+	// 初始化敏感词库
+_:
+	SensitiveTree.LoadWordsFromFile("./pkg/sensitivewords/广告.txt ")
+_:
+	SensitiveTree.LoadWordsFromFile("./pkg/sensitivewords/政治类.txt ")
+_:
+	SensitiveTree.LoadWordsFromFile("./pkg/sensitivewords/涉枪涉爆违法信息关键词.txt ")
+_:
+	SensitiveTree.LoadWordsFromFile("./pkg/sensitivewords/网址.txt ")
+_:
+	SensitiveTree.LoadWordsFromFile("./pkg/sensitivewords/色情类.txt ")
+	if err := SensitiveTree.Contains(p.Content); err != false {
+		ResponseError(c, CodeServerBusy)
 		return
 	}
 	// 从 c 取到当前发请求的用户的ID
@@ -167,8 +185,24 @@ func PostAvatar(c *gin.Context) {
 	logic.PostAvatar(c, userID, file)
 }
 
+// PostTop 置顶帖子功能实现
 func PostTop(c *gin.Context) {
 
+}
+
+// GetPostBySelect 使用查询拿到帖子
+func GetPostBySelect(c *gin.Context) {
+	title := c.Query("title")
+	if title == "" {
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	post, err := logic.GetPostByTitle(title)
+	if err != nil {
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	ResponseSuccess(c, post)
 }
 
 //// 根据社区去查询帖子列表

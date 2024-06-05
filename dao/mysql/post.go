@@ -69,3 +69,17 @@ func DeletePost(postId int64) (err error) {
 	}
 	return nil
 }
+
+// GetPostByTitle 用帖子标题模糊查询
+func GetPostsByTitle(title string) ([]*models.Post, error) {
+	var posts []*models.Post
+	// 修改 SQL 查询语句以支持模糊匹配
+	sqlStr := `SELECT post_id, title, content, author_id, community_id FROM post WHERE title LIKE ?`
+	// 使用 % 符号进行模糊匹配
+	searchTitle := "%" + title + "%"
+	err := db.Select(&posts, sqlStr, searchTitle)
+	if err != nil {
+		return nil, err
+	}
+	return posts, nil
+}

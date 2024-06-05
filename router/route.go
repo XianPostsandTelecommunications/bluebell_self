@@ -42,7 +42,7 @@ func SetupRouter(mode string) *gin.Engine {
 	// 注册
 	v1.POST("/signup", controller.SignUpHandler)
 	// 登录
-	v1.POST("/login", controller.LoginHandler)
+	v1.GET("/login", controller.LoginHandler)
 	// 图形验证码
 	//v1.GET("/loginImage", controller.LoginImageHandler)
 	// 短信验证码登录
@@ -53,6 +53,7 @@ func SetupRouter(mode string) *gin.Engine {
 	v1.GET("/community", controller.CommunityHandler)
 	v1.GET("/community/:id", controller.CommunityDetailHandler)
 	v1.GET("/post/:id", controller.GetPostDetailHandler)
+	v1.GET("/select", controller.GetPostBySelect)
 
 	v1.Use(middlewares.JWTAuthMiddleware()) // 应用JWT认证中间件
 	{
@@ -73,7 +74,7 @@ func SetupRouter(mode string) *gin.Engine {
 		// 删除帖子
 		manager.DELETE("/deleteRoot", controller.DeletePost)
 		// 置顶帖子
-		manager.POST("/postTop", controller.PostTop)
+		//manager.POST("/postTop", controller.PostTop)
 		// 删除用户头像
 		//manager.DELETE("/deleteAvatar", controller.DeleteAvatar)
 	}

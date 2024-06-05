@@ -203,7 +203,7 @@ func PostTop(c *gin.Context) {
 // @Success 200 {object} models.ResponseSuccess "成功响应"
 // @Success 400 {object} models.ResponseError "响应错误"
 // @Success 500 {object} models.ResponseError "服务器错误"
-// @Router /select [get]
+// @Router /select/name [get]
 func GetPostBySelect(c *gin.Context) {
 	title := c.Query("title")
 	if title == "" {
@@ -218,7 +218,19 @@ func GetPostBySelect(c *gin.Context) {
 	ResponseSuccess(c, post)
 }
 
-// PostComment 发布评论
+// PostComment 发布帖子评论的处理函数
+// @Summary 发布帖子评论的处理函数
+// @Description 获取有关帖子的所有评论
+// @Tags 评论相关接口(api分组展示使用的)
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer JWT"
+// @Param Comment body models.Comment true "评论内容"
+// @Security ApiKeyAuth
+// @Success 200 {object} models.ResponseSuccess "成功响应"
+// @Failure 400 {object} models.ResponseError "响应错误"
+// @Failure 500 {object} models.ResponseError "服务器错误"
+// @Router /api/v1/comments [post]
 func PostComment(c *gin.Context) {
 	comment := &models.Comment{
 		Time: time.Now().Unix(),
@@ -228,7 +240,43 @@ func PostComment(c *gin.Context) {
 		ResponseError(c, CodeInvalidParam)
 		return
 	}
-	logic.PostComment(comment)
+	if err := logic.PostComment(comment); err != nil {
+		zap.L().Error("logic.PostComment(comment) err", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+}
+
+// GetCommentsHandler 获取帖子评论的处理函数
+// @Summary 获取帖子评论
+// @Description 根据帖子ID获取所有评论
+// @Tags 评论相关接口(api分组展示使用的)
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer JWT"
+// @Param post_id path int true "帖子ID"
+// @Security ApiKeyAuth
+// @Success 200 {object} models.ResponseSuccess "成功响应"
+// @Failure 400 {object} models.ResponseError "响应错误"
+// @Failure 500 {object} models.ResponseError "服务器错误"
+// @Router /api/v1/comments/{post_id} [get]
+func GetCommentsHandler(c *gin.Context) {
+	postIDStr := c.Param("post_id")
+	postID, err := strconv.ParseInt(postIDStr, 10, 64)
+	if err != nil {
+		zap.L().Error("GetCommentsHandler invalid post_id", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
+	comments, err := logic.GetComments(postID)
+	if err != nil {
+		zap.L().Error("GetCommentsHandler logic.GetComments error", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+
+	ResponseSuccess(c, comments)
 }
 
 //// 根据社区去查询帖子列表

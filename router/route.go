@@ -59,7 +59,9 @@ func SetupRouter(mode string) *gin.Engine {
 	auth.Use(middlewares.JWTAuthMiddleware())
 	{
 		// 帖子评论
-		// auth.POST("/comment", controller.PostComment)
+		auth.POST("/comments", controller.PostComment)
+		// 获取帖子评论
+		auth.GET("/comment/get", controller.GetCommentsHandler)
 		// 用户头像上传
 		auth.POST("/user/:user_id/avatar", controller.PostAvatar)
 		// 发布帖子

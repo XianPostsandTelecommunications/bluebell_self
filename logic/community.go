@@ -2,6 +2,7 @@ package logic
 
 import (
 	"bluebell/dao/mysql"
+	"bluebell/dao/redis"
 	"bluebell/models"
 
 	"go.uber.org/zap"
@@ -24,4 +25,8 @@ func CommunityByName(communityName string) ([]*models.Post, error) {
 		return nil, err
 	}
 	return post, err
+}
+
+func GetComments(postID int64) ([]*models.Comment, error) {
+	return redis.GetComments(postID)
 }

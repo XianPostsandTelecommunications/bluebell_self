@@ -85,18 +85,39 @@ func GetCommunityPostIDsInOrder(p *models.ParamPostList) ([]string, error) {
 }
 
 func AddComment(comment *models.Comment) error {
-	key := getRedisKey(KeyPostComment)
+	key := getRedisKey(KeyPostComment + strconv.FormatInt(comment.ID, 10))
 	// 序列化评论对象
 	data, err := json.Marshal(comment)
 	if err != nil {
-		zap.L().Error("AddComment json.Marshal(comment) err", zap.Error(err))
+		zap.L().Error("AddComment json.Marshal(comment) error", zap.Error(err))
 		return err
 	}
 	// 将评论存储到Redis中，使用有序集合存储，以评论时间为分数
-	client.ZAdd(key+strconv.FormatInt(comment.ID, 10), redis.Z{Score: float64(comment.Time), Member: data}).Result()
-	if err != nil {
-		zap.L().Error("AddComment client.ZAdd err", zap.Error(err))
+	if _, err := client.ZAdd(key, redis.Z{Score: float64(comment.Time), Member: data}).Result(); err != nil {
+		zap.L().Error("AddComment client.ZAdd error", zap.Error(err))
 		return err
 	}
 	return nil
+}
+func GetComments(postID int64) ([]*models.Comment, error) {
+	key := getRedisKey(KeyPostComment + strconv.FormatInt(postID, 10))
+	// 获取有序集合中的所有成员
+	data, err := client.ZRange(key, 0, -1).Result()
+	if err != nil {
+		zap.L().Error("GetComments client.ZRange error", zap.Error(err))
+		return nil, err
+	}
+
+	// 反序列化每个成员到 Comment 结构体
+	var comments []*models.Comment
+	for _, item := range data {
+		var comment models.Comment
+		if err := json.Unmarshal([]byte(item), &comment); err != nil {
+			zap.L().Error("GetComments json.Unmarshal error", zap.Error(err))
+			continue
+		}
+		comments = append(comments, &comment)
+	}
+
+	return comments, nil
 }

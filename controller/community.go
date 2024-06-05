@@ -64,3 +64,15 @@ func CommunityDetailHandler(c *gin.Context) {
 	}
 	ResponseSuccess(c, data)
 }
+
+func CommunityByName(c *gin.Context) {
+	communityName := c.Param("name")
+	// 2. 根据id获取社区详情
+	data, err := logic.CommunityByName(communityName)
+	if err != nil {
+		zap.L().Error("logic.CommunityByName(id) failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy) // 不轻易把服务端报错暴露给外面
+		return
+	}
+	ResponseSuccess(c, data)
+}

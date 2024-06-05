@@ -33,3 +33,14 @@ func GetCommunityDetailByID(id int64) (community *models.CommunityDetail, err er
 	}
 	return community, err
 }
+
+func GetCommunityIDByName(communityName string) int64 {
+	var id int64
+	sqlStr := "select community_id from community where community_name = ?"
+	if err := db.Get(id, sqlStr, communityName); err != nil {
+		if err == sql.ErrNoRows {
+			err = ErrorInvalidID
+		}
+	}
+	return id
+}

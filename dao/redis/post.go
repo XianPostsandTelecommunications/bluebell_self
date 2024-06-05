@@ -2,8 +2,11 @@ package redis
 
 import (
 	"bluebell/models"
+	"encoding/json"
 	"strconv"
 	"time"
+
+	"go.uber.org/zap"
 
 	"github.com/go-redis/redis"
 )
@@ -79,4 +82,21 @@ func GetCommunityPostIDsInOrder(p *models.ParamPostList) ([]string, error) {
 	}
 	// 存在的话就直接根据key查询ids
 	return getIDsFormKey(key, p.Page, p.Size)
+}
+
+func AddComment(comment *models.Comment) error {
+	key := getRedisKey(KeyPostComment)
+	// 序列化评论对象
+	data, err := json.Marshal(comment)
+	if err != nil {
+		zap.L().Error("AddComment json.Marshal(comment) err", zap.Error(err))
+		return err
+	}
+	// 将评论存储到Redis中，使用有序集合存储，以评论时间为分数
+	client.ZAdd(key+strconv.FormatInt(comment.ID, 10), redis.Z{Score: float64(comment.Time), Member: data}).Result()
+	if err != nil {
+		zap.L().Error("AddComment client.ZAdd err", zap.Error(err))
+		return err
+	}
+	return nil
 }

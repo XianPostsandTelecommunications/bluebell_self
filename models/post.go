@@ -21,3 +21,10 @@ type ApiPostDetail struct {
 	*Post                               // 嵌入帖子结构体
 	*CommunityDetail `json:"community"` // 嵌入社区信息
 }
+
+type Comment struct {
+	ID      int64  `json:"id,string" db:"post_id"`
+	UserID  int64  `json:"userID" db:"user_id"`
+	Content string `json:"content" db:"content" binding:"required"`
+	Time    int64  `json:"create_time" db:"create_time"`
+}

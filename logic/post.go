@@ -245,3 +245,10 @@ func GetPostByTitle(title string) (post []*models.Post, err error) {
 	}
 	return
 }
+
+func PostComment(comment *models.Comment) {
+	err := redis.AddComment(comment)
+	if err != nil {
+		return
+	}
+}

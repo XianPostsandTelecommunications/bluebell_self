@@ -6,6 +6,7 @@ import (
 	"bluebell/pkg/badword"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -203,6 +204,19 @@ func GetPostBySelect(c *gin.Context) {
 		return
 	}
 	ResponseSuccess(c, post)
+}
+
+// PostComment 发布评论
+func PostComment(c *gin.Context) {
+	comment := &models.Comment{
+		Time: time.Now().Unix(),
+	}
+	if err := c.ShouldBindJSON(comment); err != nil {
+		zap.L().Error("PostComment with invalid params", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	logic.PostComment(comment)
 }
 
 //// 根据社区去查询帖子列表

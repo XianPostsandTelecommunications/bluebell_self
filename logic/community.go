@@ -3,6 +3,8 @@ package logic
 import (
 	"bluebell/dao/mysql"
 	"bluebell/models"
+
+	"go.uber.org/zap"
 )
 
 func GetCommunityList() ([]*models.Community, error) {
@@ -12,4 +14,14 @@ func GetCommunityList() ([]*models.Community, error) {
 
 func GetCommunityDetail(id int64) (*models.CommunityDetail, error) {
 	return mysql.GetCommunityDetailByID(id)
+}
+
+func CommunityByName(communityName string) ([]*models.Post, error) {
+	id := mysql.GetCommunityIDByName(communityName)
+	post, err := mysql.GetPostListByCommunityIDs(id)
+	if err != nil {
+		zap.L().Error("CommunityByName mysql.GetPostListByCommunityIDs(id) ", zap.Error(err))
+		return nil, err
+	}
+	return post, err
 }

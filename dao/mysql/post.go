@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"bluebell/models"
+	"strconv"
 	"strings"
 
 	"github.com/jmoiron/sqlx"
@@ -82,4 +83,17 @@ func GetPostsByTitle(title string) ([]*models.Post, error) {
 		return nil, err
 	}
 	return posts, nil
+}
+
+// GetPostListByCommunityIDs 根据给定的社区id列表查询帖子数据
+func GetPostListByCommunityIDs(id int64) (postList []*models.Post, err error) {
+	ids := strconv.FormatInt(id, 10)
+	sqlStr := `select post_id, title, content, author_id, community_id, create_time
+	from post
+	where community_id in (?)
+	order by create_time desc 
+	`
+	// https: //www.liwenzhou.com/posts/Go/sqlx/
+	_ = db.Select(&postList, sqlStr, ids)
+	return
 }

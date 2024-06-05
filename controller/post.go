@@ -192,6 +192,18 @@ func PostTop(c *gin.Context) {
 }
 
 // GetPostBySelect 使用查询拿到帖子
+// @Summary 使用查询拿到帖子
+// @Description 用帖子标题得到帖子
+// @Tags 帖子相关接口(api分组展示使用的)
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer JWT"
+// @Param title path string true "帖子标题"
+// @Security ApiKeyAuth
+// @Success 200 {object} models.ResponseSuccess "成功响应"
+// @Success 400 {object} models.ResponseError "响应错误"
+// @Success 500 {object} models.ResponseError "服务器错误"
+// @Router /select [get]
 func GetPostBySelect(c *gin.Context) {
 	title := c.Query("title")
 	if title == "" {

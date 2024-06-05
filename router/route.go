@@ -51,10 +51,11 @@ func SetupRouter(mode string) *gin.Engine {
 	v1.GET("/posts2", controller.GetPostListHandler2)
 	v1.GET("/posts", controller.GetPostListHandler)
 	v1.GET("/community", controller.CommunityHandler)
-	v1.GET("/community/:id", controller.CommunityDetailHandler)
+	v1.GET("/community/id/:id", controller.CommunityDetailHandler)
 	v1.GET("/post/:id", controller.GetPostDetailHandler)
 	v1.GET("/select", controller.GetPostBySelect)
-	v1.GET("/community/:name", controller.CommunityByName)
+	v1.GET("/community/name/:name", controller.CommunityByName)
+
 	{
 		// 帖子评论
 		//v1.POST("/comment", controller.PostComment)

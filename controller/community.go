@@ -65,6 +65,19 @@ func CommunityDetailHandler(c *gin.Context) {
 	ResponseSuccess(c, data)
 }
 
+// CommunityByName 社区name得到社区详情
+// @Summary 社区name得到社区详情
+// @Description 用name得到社区详情
+// @Tags 社区相关接口(api分组展示使用的)
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer JWT"
+// @Param name path string true "社区ID"
+// @Security ApiKeyAuth
+// @Success 200 {object} models.ResponseSuccess "成功响应"
+// @Success 400 {object} models.ResponseError "响应错误"
+// @Success 500 {object} models.ResponseError "服务器错误"
+// @Router /community/:name [get]
 func CommunityByName(c *gin.Context) {
 	communityName := c.Param("name")
 	// 2. 根据id获取社区详情
